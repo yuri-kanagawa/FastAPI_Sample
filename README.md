@@ -1,4 +1,3 @@
-
 docker container exec -it api bash
 
 pip install -r requirements.txt

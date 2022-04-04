@@ -2,12 +2,12 @@ from typing import List
 from typing import Optional
 from fastapi import APIRouter
 from fastapi import Depends
-from schemas import anime_vote_schema
-from sqlalchemy.orm import Session
-from cruds import anime_vote_crud
-from database_setting import get_db
-
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+
+from database_setting import get_db
+from schemas import anime_vote_schema
+from cruds import anime_vote_crud
 
 router = APIRouter()
 
@@ -28,26 +28,11 @@ def get_specific_votes(db: Session = Depends(get_db),
     if (filter is None):
         return anime_vote_crud.get_vote_limit_skip_ranking(db,limit,skip)
     else:
-        #まだバグっているよ～
-        if filter in ',':
-            filterSplit = filter.split(',')
-            filterMap = map(int, filterSplit)
-            filterList = list(filterMap)
-            return anime_vote_crud.get_vote_limit_skip_filterlist_ranking(db,limit,skip,filterList)
-        else:
-            filterInt = int(filter)
-            print(filter)
-            return anime_vote_crud.get_vote_limit_skip_filter_ranking(db,limit,skip,filterInt)
-
-
-# @router.post("/animevote/vote", response_model=anime_vote_schema.AnimeVoteBase)
-# def create_vote(vote: anime_vote_schema.CreateVote,db: Session = Depends(get_db)):
-#     return anime_vote_crud.create_vote(db=db,vote=vote)
+        filterSplit = filter.split(',')
+        filterListToInt = [int(s) for s in filterSplit]
+        print(filterListToInt)
+        return anime_vote_crud.get_vote_limit_skip_filterlist_ranking(db,limit,skip,filterListToInt)
 
 @router.post("/animevote/vote", response_model=anime_vote_schema.AnimeVoteBase)
 def create_vote(vote: anime_vote_schema.CreateVote,db: Session = Depends(get_db)):
     return anime_vote_crud.create_vote(db=db,vote=vote)
-
-# @router.get("/test", response_model=List[anime_vote_schema.AnimeVoteBase])
-# def test(db: Session = Depends(get_db),token: str = Depends(oauth2_scheme)):
-#     return anime_vote_crud.get_vote_all(db)

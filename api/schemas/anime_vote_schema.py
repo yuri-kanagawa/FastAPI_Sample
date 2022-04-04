@@ -1,6 +1,5 @@
-import datetime
-import ipaddress
 from typing import Optional
+
 from pydantic import BaseModel
 from pydantic import Field
 
@@ -20,12 +19,6 @@ class AnimeVoteRank(AnimeVoteBase):
 class CreateVote(AnimeVoteBase):
     user_id  : Optional[str] = Field(None,example="1111")
     ipaddress: Optional[str] = Field(None,example="192.168.0.0")
-    # create_at: datetime.datetime = Field(None, example=datetime.datetime.now())
-    # update_at: datetime.datetime = Field(None, example=datetime.datetime.now())
+
     class Config:
         orm_mode = True
-# class AnimeVoteCreate(AnimeVoteBase):
-#     create_at: Optional[int]= Field(None, example=1)
-#     update_at: Optional[int] = Field(None, example=1)
-#     class Config:
-#         orm_mode = True

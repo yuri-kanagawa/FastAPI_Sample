@@ -1,11 +1,9 @@
-from enum import unique
-from sqlalchemy import Column, Integer, String, DATETIME
-from sqlalchemy.orm import relationship
-from datetime import datetime
+from sqlalchemy import Column
+from sqlalchemy import DATETIME
+from sqlalchemy import Integer
+from sqlalchemy import String
 
 from database_setting import Base
-
-#sqlalchemy を利用してDB作成
 
 class AnimeList(Base):
     __tablename__ = "anime_list"

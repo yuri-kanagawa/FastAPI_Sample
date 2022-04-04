@@ -1,7 +1,6 @@
 from fastapi import FastAPI
+
 from routers import anime_vote_router
-import graphene_sqlalchemy
-# from routers import bbs_list
 from routers import login_router
 
 

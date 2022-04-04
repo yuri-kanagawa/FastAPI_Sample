@@ -13,5 +13,5 @@ class Token(BaseModel):
 class User(BaseModel):
     name: Optional[str]
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True

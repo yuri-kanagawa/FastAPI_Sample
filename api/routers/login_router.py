@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from database_setting import get_db
 from models import user_model
 from schemas import login_schema
-from cruds import login_crud
+from database import login_crud
 
 router = APIRouter()
 
@@ -30,5 +30,4 @@ def read_users_me(current_user: user_model.User = Depends(login_crud.get_current
 """
 scope とは？
 ⇒権限の値 
-
 """

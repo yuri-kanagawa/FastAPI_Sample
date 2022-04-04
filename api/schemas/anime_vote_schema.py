@@ -13,12 +13,8 @@ class AnimeVoteBase(BaseModel):
 class AnimeVoteRank(AnimeVoteBase):
     rank: Optional[int]= Field(None, example=1)
     vote_count: Optional[int] = Field(None, example=1)
-    class Config:
-        orm_mode = True
 
 class CreateVote(AnimeVoteBase):
     user_id  : Optional[str] = Field(None,example="1111")
     ipaddress: Optional[str] = Field(None,example="192.168.0.0")
 
-    class Config:
-        orm_mode = True

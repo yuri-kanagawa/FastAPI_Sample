@@ -65,9 +65,9 @@ def get_vote_limit_skip_filterlist_ranking(db:Session,limit: int,skip:int,filter
             func.count(anime_vote_model.AnimeVote.anime_id).label('vote_count')
         ).\
         group_by(anime_vote_model.AnimeVote.anime_id).\
+        filter(anime_vote_model.AnimeVote.anime_id.in_(filterList)).\
         limit(limit).\
         offset(skip).\
-        filter(anime_vote_model.AnimeVote.anime_id.in_([[filterList]])).\
         all()
 
 

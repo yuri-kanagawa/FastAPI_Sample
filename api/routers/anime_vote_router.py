@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from database_setting import get_db
 from schemas import anime_vote_schema
-from cruds import anime_vote_crud
+from database import anime_vote_crud
 
 router = APIRouter()
 
@@ -30,6 +30,7 @@ def get_specific_votes(db: Session = Depends(get_db),
     else:
         filterSplit = filter.split(',')
         filterListToInt = [int(s) for s in filterSplit]
+        print("kokoko")
         print(filterListToInt)
         return anime_vote_crud.get_vote_limit_skip_filterlist_ranking(db,limit,skip,filterListToInt)
 

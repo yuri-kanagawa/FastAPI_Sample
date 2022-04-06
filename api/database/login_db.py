@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from database_setting import get_db
 from models import user_model
 
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def authenticate(name: str, password: str,db:Session):

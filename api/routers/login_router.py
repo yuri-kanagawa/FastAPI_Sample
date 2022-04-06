@@ -16,13 +16,8 @@ def login(form: OAuth2PasswordRequestForm = Depends(),db:Session = Depends(get_d
     user = login_db.authenticate(form.username, form.password,db)
     return login_db.create_tokens(user.user_id,db)
 
-@router.get("/refresh_token/", response_model=login_schema.Token)
-def refresh_token(current_user: user_model.User = Depends(login_db.get_current_user_with_refresh_token)):
-    """リフレッシュトークンでトークンを再取得"""
-    return login_db.create_tokens(current_user.id)
-
 @router.get("/users/me/", response_model= login_schema.User)
-def read_users_me(current_user: user_model.User = Depends(login_db.get_current_user),):
+def read_users_me(current_user: user_model.User = Depends(login_db.get_current_user)):
     """ログイン中のユーザーを取得"""
     return current_user
 

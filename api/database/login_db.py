@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from database_setting import get_db
 from models import user_model
 
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def authenticate(name: str, password: str,db:Session):
     """パスワード認証し、userを返却"""
@@ -51,7 +51,7 @@ def get_current_user_from_token(token: str, token_type: str,db:Session):
     # トークンをデコードしてペイロードを取得。有効期限と署名は自動で検証
     payload = jwt.decode(token, 'SECRET_KEY123', algorithms=['HS256'])
 
-    # ークンタイプが一致することを確認
+    # トークンタイプが一致することを確認
     if payload['token_type'] != token_type:
         raise HTTPException(status_code=401, detail=f'トークンタイプ不一致')
 
@@ -65,13 +65,8 @@ def get_current_user_from_token(token: str, token_type: str,db:Session):
 
     return user
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 def get_current_user(token: str = Depends(oauth2_scheme),db:Session = Depends(get_db)):
     """アクセストークンからログイン中のユーザーを取得"""
     return get_current_user_from_token(token, 'access_token',db)
-
-
-def get_current_user_with_refresh_token(token: str = Depends(oauth2_scheme),db:Session = Depends(get_db)):
-    """リフレッシュトークンからログイン中のユーザーを取得"""
-    return get_current_user_from_token(token, 'refresh_token',db)

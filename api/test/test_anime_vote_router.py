@@ -14,5 +14,13 @@ def test_list_vote():
     response = client.get('/animevote')
     assert response.status_code == 200, response.text
     response_obj = response.json()
-    assert response_obj == []
+    #データ0件
+    #assert response_obj == []
+    assert response_obj == [{"anime_id": 1}]
     
+
+def test_get_specific_votes():
+    response = client.get('/animevote/ranking/11')
+    assert response.status_code == 200, response.text
+    response_obj = response.json()
+    assert response_obj == []

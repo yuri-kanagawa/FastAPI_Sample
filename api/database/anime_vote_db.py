@@ -55,7 +55,6 @@ def get_vote_limit_skip_filter_ranking(db:Session,filter:int):
         first()
 
 def get_vote_limit_skip_filterlist_ranking(db:Session,limit: int,skip:int,filterList:List[int]):
-        
     return db.query(
         func.row_number().
             over(

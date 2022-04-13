@@ -13,9 +13,11 @@ from models import user_model
 from schemas import login_schema
 from database import login_db
 
-router = APIRouter()
 
-@router.post("/uploadfile/")
+router = APIRouter()
+tag_name = ['imagefile']
+
+@router.post("/uploadfile/", tags=tag_name)
 def upload_file(upload_file: UploadFile = File(...)):
     path = f'files/{upload_file.filename}'
     with open(path, 'w+b') as buffer:
@@ -25,7 +27,7 @@ def upload_file(upload_file: UploadFile = File(...)):
         'type': upload_file.content_type
     }
 
-@router.get('/download/{name}', response_class=FileResponse)
+@router.get('/download/{name}',tags=tag_name, response_class=FileResponse)
 def get_file(name: str):
     path = f'files/{name}'
     print(type(path))

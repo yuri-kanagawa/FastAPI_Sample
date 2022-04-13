@@ -9,3 +9,6 @@ models データベースのモデル定義フォルダ
 schemas APIにリクエストした際に実行される実関数
 routes ルート定義フォルダ
 database_setting.py データベースアクセス定義ファイル
+
+■テストコマンド
+python -m pytest

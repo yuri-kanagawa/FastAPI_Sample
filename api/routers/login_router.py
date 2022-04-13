@@ -10,19 +10,15 @@ from database import login_db
 
 router = APIRouter()
 
-@router.post("/token", response_model=login_schema.Token)
+tag_name = ['login/logout']
+
+@router.post("/token", tags = tag_name, response_model=login_schema.Token)
 def login(form: OAuth2PasswordRequestForm = Depends(),db:Session = Depends(get_db)):
     """トークン発行"""
     user = login_db.authenticate(form.username, form.password,db)
     return login_db.create_tokens(user.user_id,db)
 
-@router.get("/users/me/", response_model= login_schema.User)
+@router.get("/users/me/", tags = tag_name, response_model= login_schema.User)
 def read_users_me(current_user: user_model.User = Depends(login_db.get_current_user)):
     """ログイン中のユーザーを取得"""
     return current_user
-
-
-"""
-scope とは？
-⇒権限の値 
-"""

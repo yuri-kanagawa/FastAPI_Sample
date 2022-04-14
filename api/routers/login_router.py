@@ -18,7 +18,12 @@ def login(form: OAuth2PasswordRequestForm = Depends(),db:Session = Depends(get_d
     user = login_db.authenticate(form.username, form.password,db)
     return login_db.create_tokens(user.user_id,db)
 
-@router.get("/users/me/", tags = tag_name, response_model= login_schema.User)
+@router.get("/refresh", tags = tag_name, response_model= login_schema.User)
 def read_users_me(current_user: user_model.User = Depends(login_db.get_current_user)):
     """ログイン中のユーザーを取得"""
     return current_user
+
+# @router.post("/logout", tags = tag_name, response_model=login_schema.Token)
+# def logout(session: Session = Depends(supertokens_session)):
+#     session.revoke_session()
+#     return JSONResponse({})

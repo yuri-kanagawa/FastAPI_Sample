@@ -8,6 +8,7 @@ from alembic import context
 from database_setting import Base
 from models.anime_list_model import AnimeList
 from models.anime_vote_model import AnimeVote
+from models.bbs_thread_model import BbsThread
 from models.user_model import User
 # from models.token_model import Token
 

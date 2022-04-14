@@ -12,22 +12,21 @@ from schemas import anime_vote_schema
 
 def get_vote_all(db: Session) -> List[Tuple[int, int]]:
     """
-    SQL 記述
-    result: Result = (
-        db.execute(
-            select(
-                anime_vote_model.AnimeVote.vote_id,
-                anime_vote_model.AnimeVote.anime_id
-            )
-        )
-    )
-    return result.all()
+    parametr : 無
+    全投票結果取得
     """
     #SQLAlcgemy 記述
-    return db.query(anime_vote_model.AnimeVote).all()
+    return db.query(anime_vote_model.AnimeVote.anime_id).all()
 
-def get_vote_limit_skip_ranking(db:Session,limit: int,skip:int):
-    return db.query(
+
+def get_ranking(db:Session, limit: int, skip:int, filter:List[int]):
+    """"
+    limit  : 件数の指定
+    skip   : スキップ件数
+    filter : 特定のID指定
+    """
+
+    query = db.query(
         func.row_number().
             over(
                 order_by=desc(func.count(anime_vote_model.AnimeVote.anime_id))
@@ -35,39 +34,43 @@ def get_vote_limit_skip_ranking(db:Session,limit: int,skip:int):
             anime_vote_model.AnimeVote.anime_id,
             func.count(anime_vote_model.AnimeVote.anime_id).label('vote_count')
         ).\
-        group_by(anime_vote_model.AnimeVote.anime_id).\
-        limit(limit).\
-        offset(skip).\
-        all()
+        group_by(anime_vote_model.AnimeVote.anime_id)
 
-def get_vote_limit_skip_filter_ranking(db:Session,filter:int):
+    #パラメータ1つ
+    if(limit is not None and skip is None and filter == []):
+        return query.limit(limit).all()
+    
+    if(limit is None and skip is not None and filter == []):
+        return query.offset(skip).all()
 
-    return db.query(
-        func.row_number().
-            over(
-                order_by=desc(func.count(anime_vote_model.AnimeVote.anime_id))
-            ).label('rank'),
-            anime_vote_model.AnimeVote.anime_id,
-            func.count(anime_vote_model.AnimeVote.anime_id).label('vote_count')
-        ).\
-        filter_by(anime_vote_model.AnimeVote.anime_id.in_(filter)).\
-        group_by(anime_vote_model.AnimeVote.anime_id).\
-        first()
+    if(limit is None and  skip is None and filter != []):
+        return query.filter(anime_vote_model.AnimeVote.anime_id.in_(filter)).all()
 
-def get_vote_limit_skip_filterlist_ranking(db:Session,limit: int,skip:int,filterList:List[int]):
-    return db.query(
-        func.row_number().
-            over(
-                order_by=desc(func.count(anime_vote_model.AnimeVote.anime_id))
-            ).label('rank'),
-            anime_vote_model.AnimeVote.anime_id,
-            func.count(anime_vote_model.AnimeVote.anime_id).label('vote_count')
-        ).\
-        group_by(anime_vote_model.AnimeVote.anime_id).\
-        filter(anime_vote_model.AnimeVote.anime_id.in_(filterList)).\
-        limit(limit).\
-        offset(skip).\
-        all()
+
+    #パラメータ2つ
+    #パラメータ2つはこのパターン以外使わなさそう
+    if(limit is not None and skip is not None and filter == []):
+        return query.\
+                limit(limit).\
+                offset(skip).\
+                all()
+
+    if(limit is not None and skip is None and filter != []):
+        return query.filter(anime_vote_model.AnimeVote.anime_id.in_(filter)).\
+                limit(limit).\
+                all()
+
+    if(limit is None and skip is not None and filter != []):
+        return query.filter(anime_vote_model.AnimeVote.anime_id.in_(filter)).\
+                offset(skip).\
+                all()
+
+    #パラメータ3つ
+    if(limit is not  None and  skip is not None and filter != []):
+        return query.filter(anime_vote_model.AnimeVote.anime_id.in_(filter)).\
+                limit(limit).\
+                offset(skip).\
+                all()
 
 
 def create_vote(db:Session,vote:anime_vote_schema.CreateVote) -> anime_vote_model.AnimeVote:
@@ -76,4 +79,4 @@ def create_vote(db:Session,vote:anime_vote_schema.CreateVote) -> anime_vote_mode
     db.add(db_vote)
     db.commit()
     db.refresh(db_vote)
-    return db_vote
+    return vote.anime_id

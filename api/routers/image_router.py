@@ -18,8 +18,9 @@ router = APIRouter()
 tag_name = ['imagefile']
 
 @router.post("/uploadfile/", tags=tag_name)
-def upload_file(upload_file: UploadFile = File(...)):
+def upload_file(db: Session = Depends(get_db), upload_file: UploadFile = File(...)):
     path = f'files/{upload_file.filename}'
+    print(path)
     with open(path, 'w+b') as buffer:
         shutil.copyfileobj(upload_file.file, buffer)
     return {

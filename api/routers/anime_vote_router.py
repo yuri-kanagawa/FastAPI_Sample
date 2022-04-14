@@ -1,8 +1,13 @@
 from typing import List
 from typing import Optional
+
 from fastapi import APIRouter
+from fastapi import Body
 from fastapi import Depends
+from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from database_setting import get_db
@@ -15,10 +20,11 @@ tag_name = ['vote']
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-
-@router.get("/animevote", tags=tag_name, response_model=List[anime_vote_schema.AnimeVoteBase])
-def list_vote(db: Session = Depends(get_db)):
-    return anime_vote_db.get_vote_all(db)
+@router.get("/animevote", tags=tag_name, response_model=List[anime_vote_schema.AnimeVoteBase], status_code=status.HTTP_200_OK)
+def list_vote(db: Session = Depends(get_db),):
+    data = anime_vote_db.get_vote_all(db)
+    data_to_json = jsonable_encoder(data)
+    return JSONResponse(content={'status_code': 200, 'data': data_to_json})
 
 @router.get("/animevote/ranking", tags=tag_name, response_model=List[anime_vote_schema.AnimeVoteRank])
 def get_specific_votes(db: Session = Depends(get_db),
@@ -26,17 +32,27 @@ def get_specific_votes(db: Session = Depends(get_db),
                        skip : Optional[int] = None,
                        filter:Optional[str] = None
                        ):
-    if (limit is not None and skip is not None and filter is None):
-        return anime_vote_db.get_vote_limit_skip_ranking(db,limit,skip)
-    elif(filter is not None):
-        filterSplit = filter.split(',')
-        filterListToInt = [int(s) for s in filterSplit]
-        return anime_vote_db.get_vote_limit_skip_filterlist_ranking(db,limit,skip,filterListToInt)
+    """
+    limit  : 件数の指定\n
+    skip   : スキップ件数\n
+    filter : 特定のID指定
+    """
+
+    if(filter is not None):
+        split_filter = filter.split(',')
+        filter_tO_int = [int(s) for s in split_filter]
     else:
-        print(9)
-        return []
+        filter_tO_int = []
+
+    data = anime_vote_db.get_ranking(db,limit,skip,filter_tO_int)
+    data_to_json = jsonable_encoder(data)
+    return JSONResponse(content={'status_code': 200, 'data':data_to_json})
+
 
 
 @router.post("/animevote/vote", tags=tag_name, response_model=anime_vote_schema.AnimeVoteBase)
 def create_vote(vote: anime_vote_schema.CreateVote,db: Session = Depends(get_db)):
-    return anime_vote_db.create_vote(db=db,vote=vote)
+
+    data = anime_vote_db.create_vote(db=db,vote=vote)
+    data_to_json = jsonable_encoder(data)
+    return JSONResponse(content={'status_code': 200, 'data':data_to_json})

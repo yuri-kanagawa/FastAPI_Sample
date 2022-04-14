@@ -44,8 +44,7 @@ def create_tokens(user_id: int,db:Session):
     user.refresh_token = refresh_token
     db.commit()
     db.refresh(user)
-    return {'access_token': access_token, 'refresh_token': refresh_token, 'token_type': 'bearer'}
-
+    return {'status': 'success', 'access_token': access_token, 'refresh_token': refresh_token, 'token_type': 'bearer'}
 
 def get_current_user_from_token(token: str, token_type: str,db:Session):
     """tokenからユーザーを取得"""
@@ -68,6 +67,6 @@ def get_current_user_from_token(token: str, token_type: str,db:Session):
 
 
 
-def get_current_user(token: str = Depends(oauth2_scheme),db:Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """アクセストークンからログイン中のユーザーを取得"""
-    return get_current_user_from_token(token, 'access_token',db)
+    return get_current_user_from_token(token, 'access_token', db)

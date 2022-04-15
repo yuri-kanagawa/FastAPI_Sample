@@ -1,8 +1,8 @@
 import datetime
-from typing import List, Tuple
+from typing import List
 from typing import Tuple
 
-from sqlalchemy import func,desc
+from sqlalchemy import func
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
 

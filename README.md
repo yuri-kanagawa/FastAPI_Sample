@@ -1,29 +1,29 @@
 >■CreateEnvironment 環境構築<br>
->docker-compose build
->ocker-compose up -d
->docker container exec -it backend bash
+>docker-compose build<br>
+>ocker-compose up -d<br>
+>docker container exec -it backend bash<br>
 
 ---
 
->■LibraryInstall
->pip install -r requirements.txt
+>■LibraryInstall<br>
+>pip install -r requirements.txt<br>
 
 ---
 
->■TestCommand テストコマンド
->python -m pytest
+>■TestCommand テストコマンド<br>
+>python -m pytest<br>
 
 ---
 
->■Create Mygration File マイグレーションファイル自動生成
->alembic revision --autogenerate -m "create tables"
+>■Create Mygration File マイグレーションファイル自動生成<br>
+>alembic revision --autogenerate -m "create tables"<br>
 
 ---
 
->■ Reflect Migration マイグレーション反映
->alembic upgrade head
+>■ Reflect Migration マイグレーション反映<br>
+>alembic upgrade head<br>
 
 ---
 
->■ Migration Down Grade マイグレーションダウングレード
->alembic downgrade -1
+>■ Migration Down Grade マイグレーションダウングレード<br>
+>alembic downgrade -1<br>

@@ -1,14 +1,29 @@
-■コマンド
-docker container exec -it api bash
-pip install -r requirements.txt
+> ■ CreateEnvironment 環境構築
+> docker-compose build
+> ocker-compose up -d
+> docker container exec -it backend bash
 
-■ディレクトリ構成
-alembic マイグレーション管理フォルダ
-cluds データベースのcurd操作フォルダ
-models データベースのモデル定義フォルダ
-schemas APIにリクエストした際に実行される実関数
-routes ルート定義フォルダ
-database_setting.py データベースアクセス定義ファイル
+---
 
-■テストコマンド
-python -m pytest
+> ■ LibraryInstall
+> pip install -r requirements.txt
+
+---
+
+> ■ TestCommand テストコマンド
+> python -m pytest
+
+---
+
+> ■ Create Mygration File マイグレーションファイル自動生成
+> alembic revision --autogenerate -m "create tables"
+
+---
+
+> ■ Reflect Migration マイグレーション反映
+> alembic upgrade head
+
+---
+
+> ■ Migration Down Grade マイグレーションダウングレード
+> alembic downgrade -1

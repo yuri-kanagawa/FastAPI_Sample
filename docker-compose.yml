@@ -5,7 +5,7 @@ services:
   db:
     container_name: "db"
     # path配下のDockerfile読み込み
-    build: ./docker/mysql
+    build: ./mysql
     # コンテナが落ちたら再起動する
     restart: always
     tty: true
@@ -16,25 +16,26 @@ services:
       MYSQL_ROOT_PASSWORD: password # ルートパスワード
     ports:
       - "3306:3306"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d # 定義どおりにテーブル作成
-      - ./docker/mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf # MySQLの基本設定(文字化け対策)
+      - ./mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf # MySQLの基本設定(文字化け対策)
+      # - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d # 定義どおりにテーブル作成
       - ./log/mysql:/var/log/mysql # ログの保存
     networks:
       - local-net
 
   # FastAPI
-  api:
+  backend:
     # db起動後に立ち上げる
     links:
       - db
-    container_name: "api"
+    container_name: "backend"
     # path配下のDockerfile読み込み
-    build: ./docker/api
+    build: ./backend
     ports:
       - "8000:8000"
     volumes:
-      - ./api:/src
+      - ./backend:/src/backend
     networks:
       - local-net
 

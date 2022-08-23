@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 
 from routers import bbs_threads_router
 from routers import users_router
@@ -22,4 +22,4 @@ app = FastAPI(
 app.include_router(users_router.router)
 app.include_router(bbs_threads_router.router)
 
-app.mount('/files', StaticFiles(directory="files"), name='files')
+# app.mount('/files', StaticFiles(directory="files"), name='files')
